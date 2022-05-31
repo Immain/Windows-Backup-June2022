@@ -1,0 +1,91 @@
+########################################
+#              Simple Backup           #
+########################################
+- hosts: windows
+  gather_facts: yes
+  vars:
+    date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+    
+  tasks:
+  # Pop Up Message To Warn Users #
+  - name: Backing Up Windows to External Drive
+    win_msg:
+      display_seconds: 10
+      msg: "SYSTEM CONNECTED -  Backing up Windows, Go Get Some Coffee, This May Take Awhile"
+
+# Create Log Folders
+  - name: Creating Documents Log Folder
+    win_file:
+      path: W:\Backup\logs\Documents
+      state: directory
+
+  - name: Creating Downloads Log Folder
+    win_file:
+      path: W:\Backup\logs\Downloads
+      state: directory
+
+  - name: Creating Pictures Log Folder
+    win_file:
+      path: W:\Backup\logs\Pictures
+      state: directory
+
+  - name: Creating Desktop Log Folder
+    win_file:
+      path: W:\Backup\logs\Desktop
+      state: directory
+
+### Backups ###
+
+# Documents
+  - name: Start Backup of Documents
+    win_copy:
+      src: C:\Users\user\Documents
+      dest: W:\Backup\Documents-{{ date }}
+      remote_src: yes
+
+  - name: Write Documents Log Content
+    win_lineinfile:
+      path: W:\Backup\logs\Documents\log-{{ date }}
+      create: yes
+      line: 'Documents have been sucessfully copied to W:\Backup\Documents'
+
+# Downloads
+  - name: Start Backup of Downloads
+    win_copy:
+      src: C:\Users\user\Downloads
+      dest: W:\Backup\Downloads-{{ date }}
+      remote_src: yes
+
+  - name: Write Downloads Log Content
+    win_lineinfile:
+      path: W:\Backup\logs\Downloads\log-{{ date }}
+      create: yes
+      line: 'Downloads have been sucessfully copied to W:\Backup\Downloads'
+
+# Pictures
+  - name: Start Backup of Pictures
+    win_copy:
+      src: C:\Users\user\Pictures
+      dest: W:\Backup\Pictures-{{ date }}
+      remote_src: yes
+
+  - name: Write Pictures Log Content
+    win_lineinfile:
+      path: W:\Backup\logs\Pictures\log-{{ date }}
+      create: yes
+      line: 'Pictures have been sucessfully copied to W:\Backup\Pictures'
+
+# Desktop
+  - name: Start Backup of Desktop
+    win_copy:
+      src: C:\Users\user\Desktop
+      dest: W:\IanBackup\Desktop-{{ date }}
+      remote_src: yes
+
+  - name: Write Desktop Log Content
+    win_lineinfile:
+      path: W:\Backup\logs\Desktop\log-{{ date }}
+      create: yes
+      line: 'Desktop files have been sucessfully copied to W:\Backup\Desktop'
+
+######
