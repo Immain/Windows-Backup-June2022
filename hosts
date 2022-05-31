@@ -1,0 +1,8 @@
+[windows]
+x.x.x.x
+
+[windows:vars]
+ansible_connection=winrm
+ansible_user=administrator
+ansible_password=P@$$w0rD!!
+ansible_winrm_server_cert_validation=ignore
